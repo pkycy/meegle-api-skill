@@ -1,8 +1,8 @@
 ---
 name: meegle-api-credentials
 description: |
-  Obtain Meegle API access credentials: domain, plugin_access_token, user_access_token.
-  Read this first before any other Meegle API skill; then use meegle-api-users for context and request headers.
+  Obtain Meegle API access credentials: domain, token, context (project_key, user_key), and request headers.
+  Read this first before any other Meegle API skill; all call prerequisites are in this skill.
 metadata:
   openclaw: {}
   required_credentials:
@@ -25,9 +25,9 @@ metadata:
     user_key: "User identifier; in Meegle Developer Platform double-click the avatar to get it (or from user_access_token response)"
 ---
 
-# Meegle API — Credentials (obtain access token)
+# Meegle API — Credentials (domain, token, context, headers)
 
-Generate Meegle **domain** and **access token** (plugin or user) for calling OpenAPI. Other Meegle API skills assume you have obtained credentials via this skill first.
+Generate Meegle **domain**, **access token** (plugin or user), **context** (project_key, user_key), and **request headers** for calling OpenAPI. Other Meegle API skills assume you have obtained everything from this skill before calling.
 
 ## Domain (API base host)
 
@@ -210,7 +210,35 @@ recommended_openclaw_strategy:
 
 ---
 
-## Skill Pack (Auth Layer)
+## Context (project_key, user_key)
+
+Context used by most OpenAPI calls:
+
+| Context | Description | Where to obtain |
+|---------|-------------|-----------------|
+| **project_key** | Space (project) identifier | Meegle Developer Platform: double-click the **project icon**; or from project URL |
+| **user_key** | User identifier | Meegle Developer Platform: double-click the **avatar**; or from `user_key` in user_access_token response |
+
+Use **project_key** in path or body (e.g. `{project_key}` in URL). Use **user_key** in header `X-User-Key` when calling with plugin_access_token.
+
+---
+
+## Request headers (when calling OpenAPIs)
+
+When calling any Meegle OpenAPI (Space, Work Items, Setting, etc.):
+
+- **With plugin_access_token**: Set `X-Plugin-Token: {{plugin_access_token}}`. Optionally set `X-User-Key: {{user_key}}` when the API requires acting as a user.
+- **With user_access_token**: Set `X-Plugin-Token: {{user_access_token}}` (the user token value here, not the plugin token). Do not use `X-User-Key` when using user token.
+
+All requests use the same **domain** (e.g. `https://project.larksuite.com` or `https://project.feishu.cn`) as the base URL.
+
+---
+
+## Skill Pack (implementation details)
+
+Auth, context, and headers for OpenClaw implementation and integration.
+
+### Auth Layer
 
 Implementation details for obtaining tokens.
 
@@ -325,3 +353,83 @@ outputs:
   refresh_token_expire_time:
     type: number
 ```
+
+### Context Layer
+
+```yaml
+name: meegle.context.resolve_project
+type: utility
+description: Resolve project_key
+inputs:
+  project_key:
+    type: string
+    required: false
+    description: |
+      Space unique identifier.
+      How to get: In Meegle Developer Platform, double-click the project icon; or use project_key from project URL.
+behavior:
+  - If default project_key is configured, use it
+  - Otherwise ask user to provide
+outputs:
+  project_key:
+    type: string
+
+---
+
+name: meegle.context.resolve_user_key
+type: utility
+description: Resolve user_key
+inputs:
+  user_key:
+    type: string
+    required: false
+    description: |
+      User unique identifier.
+      How to get: In Meegle Developer Platform, double-click the avatar; or use user_key from user_access_token response.
+  user_access_token:
+    type: string
+    required: false
+behavior:
+  - If user_access_token exists, use its user_key first
+  - Otherwise ask user to provide explicitly
+outputs:
+  user_key:
+    type: string
+```
+
+### Header Decision Rule
+
+```yaml
+name: meegle.http.prepare_headers
+type: internal
+description: Build OpenAPI request headers by operation type
+inputs:
+  operation_type:
+    type: string
+    required: true
+    description: read | write
+  plugin_access_token:
+    type: string
+    required: true
+  user_access_token:
+    type: string
+    required: false
+  user_key:
+    type: string
+    required: false
+rules:
+  - if: operation_type == "write" and user_access_token exists
+    headers:
+      X-Plugin-Token: "{{user_access_token}}"
+  - if: operation_type == "read"
+    headers:
+      X-Plugin-Token: "{{plugin_access_token}}"
+      X-User-Key: "{{user_key}}"
+```
+
+### Global Constraints
+
+- plugin_access_token is valid for 7200 seconds; cache and reuse.
+- user_access_token must be used server-side only.
+- Prefer user_access_token for write operations.
+- All OpenAPI calls must respect 15 QPS per token.

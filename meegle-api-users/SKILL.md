@@ -1,115 +1,15 @@
 ---
 name: meegle-api-users
 description: |
-  Meegle API: context (project_key, user_key), request headers, and user-related OpenAPIs.
-  Obtain domain and token from meegle-api-credentials first; then use this skill for headers and user APIs.
+  Meegle API: user-related OpenAPIs (e.g. user groups, members).
+  Domain, token, context, and request headers are obtained from meegle-api-credentials.
 metadata:
   openclaw: {}
-  context:
-    project_key: "Space identifier; in Meegle Developer Platform double-click the project icon to get it"
-    user_key: "User identifier; in Meegle Developer Platform double-click the avatar to get it (or from user_access_token response)"
 ---
 
-# Meegle API — Users (context and request headers)
+# Meegle API — Users
 
-Context, request headers, and user-related OpenAPIs. **Domain and access token** are obtained via skill **meegle-api-credentials**; this skill documents how to use them (headers, project_key, user_key) and provides user APIs.
-
-### How to use tokens (when calling other OpenAPIs)
-
-- **plugin_access_token**: Add header `X-Plugin-Token: {{plugin_access_token}}`; optionally `X-User-Key: {{user_key}}`.
-- **user_access_token**: Add header `X-Plugin-Token: {{user_access_token}}` (use the user token here, not the plugin token).
-
----
-
-## Skill Pack (implementation details)
-
-Context, request headers, and global constraints for OpenClaw implementation and integration.
-
-### Context Layer
-
-```yaml
-name: meegle.context.resolve_project
-type: utility
-description: Resolve project_key
-inputs:
-  project_key:
-    type: string
-    required: false
-    description: |
-      Space unique identifier.
-      How to get: In Meegle Developer Platform, double-click the project icon; or use project_key from project URL.
-behavior:
-  - If default project_key is configured, use it
-  - Otherwise ask user to provide
-outputs:
-  project_key:
-    type: string
-
----
-
-name: meegle.context.resolve_user_key
-type: utility
-description: Resolve user_key
-inputs:
-  user_key:
-    type: string
-    required: false
-    description: |
-      User unique identifier.
-      How to get: In Meegle Developer Platform, double-click the avatar; or use user_key from user_access_token response.
-  user_access_token:
-    type: string
-    required: false
-behavior:
-  - If user_access_token exists, use its user_key first
-  - Otherwise ask user to provide explicitly
-outputs:
-  user_key:
-    type: string
-```
-
-### Header Decision Rule
-
-```yaml
-name: meegle.http.prepare_headers
-type: internal
-description: Build OpenAPI request headers by operation type
-inputs:
-  operation_type:
-    type: string
-    required: true
-    description: read | write
-  plugin_access_token:
-    type: string
-    required: true
-  user_access_token:
-    type: string
-    required: false
-  user_key:
-    type: string
-    required: false
-rules:
-  - if: operation_type == "write" and user_access_token exists
-    headers:
-      X-Plugin-Token: "{{user_access_token}}"
-  - if: operation_type == "read"
-    headers:
-      X-Plugin-Token: "{{plugin_access_token}}"
-      X-User-Key: "{{user_key}}"
-```
-
-### Global Constraints
-
-- plugin_access_token is valid for 7200 seconds; cache and reuse.
-- user_access_token must be used server-side only.
-- Prefer user_access_token for write operations.
-- All OpenAPI calls must respect 15 QPS per token.
-
----
-
-## Users (OpenAPIs)
-
-User-related Meegle OpenAPIs (e.g. user info, list members). Domain and token from **meegle-api-credentials**.
+User-related Meegle OpenAPIs (e.g. user info, list members). **Domain, token, context (project_key, user_key), and request headers** are all obtained from skill **meegle-api-credentials**; this skill only documents the user APIs.
 
 ---
 
