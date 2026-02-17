@@ -4,7 +4,10 @@ description: |
   Meegle OpenAPI for work items: create, get, update, list, search, and related operations.
   Prerequisites: token and domain — see skill meegle-api-users.
 metadata:
-  { "openclaw": {} }
+  openclaw: {}
+  required_credentials:
+    domain: "From meegle-api-users"
+    plugin_access_token_or_user_access_token: "From meegle-api-users (obtain token first)"
 ---
 
 # Meegle API — Work Items

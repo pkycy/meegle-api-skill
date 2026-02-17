@@ -8,6 +8,18 @@ This repository provides a collection of Cursor Agent Skills that help AI assist
 
 Meegle API Skill splits Meegle OpenAPI into multiple sub-skills by functional area. Before calling any Meegle API, read **meegle-api-users** first to obtain domain, access token, request headers, and other prerequisites.
 
+## Required Credentials
+
+All skills declare required credentials in their metadata. For the initial setup (meegle-api-users), you need:
+
+| Credential | Description | Where to obtain |
+|------------|-------------|-----------------|
+| `plugin_id` | Plugin ID | Meegle Developer Platform → Plugin → Basic Information |
+| `plugin_secret` | Plugin secret | Meegle Developer Platform → Plugin → Basic Information |
+| `domain` | API host | `project.larksuite.com` (international) or `project.feishu.cn` (China) |
+
+Optional context: `project_key` (space identifier), `user_key` (user identifier). For user operations, `authorization_code` and `refresh_token` are used to obtain `user_access_token`. See [meegle-api-users](./meegle-api-users/SKILL.md) for details.
+
 ## Skill List
 
 | Order | Sub-skill | When to read |

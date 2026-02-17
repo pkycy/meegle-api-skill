@@ -4,7 +4,25 @@ description: |
   Meegle API prerequisite: domain, access token (plugin/user), context (project_key, user_key),
   request headers, and global constraints. User-related OpenAPIs. Read this first before other Meegle API skills.
 metadata:
-  { "openclaw": {} }
+  openclaw: {}
+  required_credentials:
+    plugin_id:
+      description: "Plugin ID from Meegle Developer Platform → Plugin → Basic Information"
+      source: secret
+    plugin_secret:
+      description: "Plugin secret from Meegle Developer Platform → Plugin → Basic Information"
+      source: secret
+    domain:
+      description: "API host: project.larksuite.com (international) or project.feishu.cn (China)"
+      default: project.larksuite.com
+  optional_credentials:
+    authorization_code:
+      description: "OAuth code from getAuthCode(); required for user_access_token"
+    refresh_token:
+      description: "From user_plugin_token response; for refreshing user_access_token"
+  context:
+    project_key: "Space identifier; from project URL or space settings"
+    user_key: "User identifier; from user_access_token response or user profile"
 ---
 
 # Meegle API — Users (and shared prerequisites)
