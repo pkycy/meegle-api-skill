@@ -21,8 +21,8 @@ metadata:
     refresh_token:
       description: "From user_plugin_token response; for refreshing user_access_token"
   context:
-    project_key: "Space identifier; from project URL or space settings"
-    user_key: "User identifier; from user_access_token response or user profile"
+    project_key: "Space identifier; in Meegle Developer Platform double-click the project icon to get it"
+    user_key: "User identifier; in Meegle Developer Platform double-click the avatar to get it (or from user_access_token response)"
 ---
 
 # Meegle API — Users (and shared prerequisites)
@@ -338,7 +338,7 @@ inputs:
     required: false
     description: |
       Space unique identifier.
-      How to get: 1) Double-click space icon in Meegle project. 2) project_key in project URL.
+      How to get: In Meegle Developer Platform, double-click the project icon; or use project_key from project URL.
 behavior:
   - If default project_key is configured, use it
   - Otherwise ask user to provide
@@ -357,7 +357,7 @@ inputs:
     required: false
     description: |
       User unique identifier.
-      How to get: 1) Double-click user avatar in Meegle. 2) user_key from user_access_token response.
+      How to get: In Meegle Developer Platform, double-click the avatar; or use user_key from user_access_token response.
   user_access_token:
     type: string
     required: false

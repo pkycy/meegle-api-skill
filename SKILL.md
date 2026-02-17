@@ -9,8 +9,8 @@ metadata:
     plugin_secret: "Plugin secret from Meegle Developer Platform → Plugin → Basic Information"
     domain: "API host: project.larksuite.com (international) or project.feishu.cn (China)"
   optional_context:
-    project_key: "Space identifier for the target project"
-    user_key: "User identifier when acting on behalf of a user"
+    project_key: "Space identifier; in Meegle Developer Platform double-click the project icon to get it"
+    user_key: "User identifier; in Meegle Developer Platform double-click the avatar to get it"
     user_access_token: "Required for write operations on behalf of user; obtain via OAuth (see meegle-api-users)"
 ---
 

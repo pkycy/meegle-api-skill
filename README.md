@@ -18,7 +18,7 @@ All skills declare required credentials in their metadata. For the initial setup
 | `plugin_secret` | Plugin secret | Meegle Developer Platform → Plugin → Basic Information |
 | `domain` | API host | `project.larksuite.com` (international) or `project.feishu.cn` (China) |
 
-Optional context: `project_key` (space identifier), `user_key` (user identifier). For user operations, `authorization_code` and `refresh_token` are used to obtain `user_access_token`. See [meegle-api-users](./meegle-api-users/SKILL.md) for details.
+Optional context: `project_key` (space identifier), `user_key` (user identifier). In **Meegle Developer Platform**, double-click the **avatar** to get `user_key`, and double-click the **project icon** to get `project_key`. For user operations, `authorization_code` and `refresh_token` are used to obtain `user_access_token`. See [meegle-api-users](./meegle-api-users/SKILL.md) for details.
 
 ## Skill List
 
