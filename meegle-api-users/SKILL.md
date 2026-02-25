@@ -1,15 +1,12 @@
 ---
 name: meegle-api-users
-description: |
-  Meegle API: user-related OpenAPIs (e.g. user groups, members).
-  Domain, token, context, and request headers are obtained from meegle-api-credentials.
-metadata:
-  openclaw: {}
+description: Meegle user-related OpenAPIs (user groups, members). Credentials from meegle-api-credentials.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Users
 
-User-related Meegle OpenAPIs (e.g. user info, list members). **Domain, token, context (project_key, user_key), and request headers** are all obtained from skill **meegle-api-credentials**; this skill only documents the user APIs.
+User-related OpenAPIs. Domain, token, context, headers from **meegle-api-credentials**.
 
 ---
 
@@ -32,93 +29,15 @@ Query the members of user groups in a specified space. Supports space administra
 ```yaml
 name: get_user_group_members
 type: api
-description: >
-  Query the members of user groups in a specified space.
-  Supports PROJECT_ADMIN, PROJECT_MEMBER, and CUSTOMIZE user group types.
-
-auth:
-  type: user_access_token
-  note: Only user_access_token is supported; plugin_access_token is NOT supported.
-
-http:
-  method: POST
-  url: https://{domain}/open_api/{project_key}/user_groups/members/page
-  headers:
-    Content-Type: application/json
-    X-Plugin-Token: "{{user_access_token}}"
-
-path_params:
-  project_key:
-    type: string
-    required: true
-    description: >
-      Space ID (project_key) or space domain name (simple_name).
-      project_key: Double-click space name in Meegle.
-      simple_name: From space URL, e.g. https://meegle.com/doc/overview → doc.
-
-inputs:
-  user_group_type:
-    type: string
-    required: true
-    enum: [PROJECT_ADMIN, PROJECT_MEMBER, CUSTOMIZE]
-    description: |
-      PROJECT_ADMIN: Space administrator
-      PROJECT_MEMBER: Space member
-      CUSTOMIZE: Custom user group
-  user_group_ids:
-    type: array
-    items: string
-    required: false
-    constraints:
-      max_items: 50
-    description: >
-      List of user group IDs. From user group page URL, e.g.
-      .../userGroup/756472096042365xxxx → 756472096042365xxxx.
-      When user_group_type=CUSTOMIZE, if empty, returns all members of all custom user groups in the space.
-      Max 50 user groups per request.
-  page_num:
-    type: integer
-    required: false
-    default: 1
-    description: Page number. Default first page.
-  page_size:
-    type: integer
-    required: false
-    default: 50
-    constraints:
-      max: 100
-    description: Items per page. Default 50, max 100.
-
-outputs:
-  data:
-    type: object
-    properties:
-      list:
-        type: array
-        items:
-          user_count: integer
-          user_members: array
-          id: string
-          name: string
-        description: |
-          user_members: user_key list of members
-          id: user group ID
-          name: user group name
-      pagination:
-        page_num: integer
-        page_size: integer
-        has_more: boolean
-
-constraints:
-  - Permission: Permission Management – Users
-  - user_group_ids max 50 when user_group_type=CUSTOMIZE
-  - page_size max 100
-
-error_mapping:
-  20002: Page size limit (more than 100 per page)
-  1000053008: User group type not supported
-  1000053010: User group not found (no matching user group in the space)
-  1000053011: User group limit (more than 50 user groups in one request)
+description: Query user group members. user_access_token only (no plugin token).
+auth: { type: user_access_token }
+http: { method: POST, url: "https://{domain}/open_api/{project_key}/user_groups/members/page" }
+headers: { Content-Type: application/json, X-Plugin-Token: "{{user_access_token}}" }
+path_params: { project_key: { type: string, required: true } }
+inputs: { user_group_type: { type: string, required: true, enum: [PROJECT_ADMIN, PROJECT_MEMBER, CUSTOMIZE] }, user_group_ids: { type: array, max_items: 50 }, page_num: { type: integer, default: 1 }, page_size: { type: integer, default: 50, max: 100 } }
+outputs: { data: { list: array, pagination: object } }
+constraints: [Permission: Users, page_size max 100]
+error_mapping: { 20002: Page size limit, 1000053008: Type not supported, 1000053010: User group not found, 1000053011: Max 50 groups }
 ```
 
 ### Usage notes

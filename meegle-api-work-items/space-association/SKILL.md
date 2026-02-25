@@ -1,9 +1,7 @@
 ---
 name: meegle-api-space-association
-description: |
-  Meegle OpenAPI for space association operations.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for space association operations.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Space Association

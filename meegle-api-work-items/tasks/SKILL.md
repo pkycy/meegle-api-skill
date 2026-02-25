@@ -1,9 +1,7 @@
 ---
 name: meegle-api-work-item-tasks
-description: |
-  Meegle OpenAPI for work item task operations.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for work item task operations.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Tasks

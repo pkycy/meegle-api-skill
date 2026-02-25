@@ -1,23 +1,12 @@
 ---
 name: meegle-api-comments
-description: |
-  Meegle OpenAPI for comments on work items or other entities.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for comments on work items.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Comments
 
-Comment-related OpenAPIs (e.g. add, list, update comments on work items). Use when you need to create or query comments.
-
-## Scope
-
-This skill covers comment operations including:
-
-- Create comment on work items or other entities
-- List comments
-- Update and delete comments
-- Related comment endpoints
+Add, list, update, delete comments on work items.
 
 ---
 
@@ -36,69 +25,15 @@ Add a comment under the specified work item. The comment appears on the Comments
 ```yaml
 name: add_comments
 type: api
-description: >
-  Add a comment under the specified work item. The comment appears on the
-  Comments/Notes tab and is marked as added by the plugin.
-
-auth:
-  type: plugin_access_token
-  header: X-Plugin-Token
-  user_header: X-User-Key
-
-http:
-  method: POST
-  url: https://{domain}/open_api/{project_key}/work_item/{work_item_type_key}/{work_item_id}/comment/create
-  headers:
-    Content-Type: application/json
-    X-Plugin-Token: "{{resolved_token}}"
-    X-User-Key: "{{user_key}}"
-
-path_params:
-  project_key:
-    type: string
-    required: true
-    description: >
-      Space ID (project_key) or space domain name (simple_name).
-      project_key: Double-click space name in Meegle.
-      simple_name: From space URL, e.g. https://meegle.com/doc/overview → doc.
-  work_item_type_key:
-    type: string
-    required: true
-    description: Work item type. Obtainable via "Get work item types in the space".
-  work_item_id:
-    type: string
-    required: true
-    description: Work item instance ID. In work item details, expand ··· in the upper right, click ID.
-
-inputs:
-  content:
-    type: string
-    required: false
-    description: >
-      Plain text comment content. Either content or rich_text required; both cannot be empty.
-      When both have values, rich_text takes precedence.
-  rich_text:
-    type: object
-    required: false
-    description: >
-      Rich text format. Either content or rich_text required; rich_text takes precedence when both present.
-      Refer to Rich Text Format. Direct Markdown is not supported.
-
-outputs:
-  data:
-    type: integer
-    description: ID of the newly created comment.
-
-constraints:
-  - Permission: Permission Management – Comment
-  - Either content or rich_text must be provided (both cannot be empty)
-  - When both provided, rich_text takes precedence
-
-error_mapping:
-  10211: Token info invalid (user_key is empty)
-  30001: Data not found (project_key error)
-  50001: Create fail (no permission to comment)
-  1000051280: Params invalid (rich text format incorrect; refer to Rich Text Format)
+description: Add comment under work item; content or rich_text required (rich_text precedence).
+auth: { type: plugin_access_token, header: X-Plugin-Token, user_header: X-User-Key }
+http: { method: POST, url: "https://{domain}/open_api/{project_key}/work_item/{work_item_type_key}/{work_item_id}/comment/create" }
+headers: { Content-Type: application/json, X-Plugin-Token: "{{resolved_token}}", X-User-Key: "{{user_key}}" }
+path_params: { project_key: string, work_item_type_key: string, work_item_id: string }
+inputs: { content: string, rich_text: object }
+outputs: { data: integer }
+constraints: [Permission: Comment, content or rich_text required]
+error_mapping: { 10211: Token invalid, 30001: Data not found, 50001: No permission, 1000051280: Rich text invalid }
 ```
 
 ### Usage notes

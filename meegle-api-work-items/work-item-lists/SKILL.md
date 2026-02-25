@@ -1,11 +1,7 @@
 ---
 name: meegle-api-work-item-lists
-description: |
-  Meegle OpenAPI for listing, searching, and querying work items.
-  Includes single-space filter, cross-space filter, complex search, full-text search,
-  associated items, and full search.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for listing, searching, querying work items (filter, full-text, associated).
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Work Item Lists & Search

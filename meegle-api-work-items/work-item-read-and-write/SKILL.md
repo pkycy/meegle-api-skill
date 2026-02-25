@@ -1,9 +1,7 @@
 ---
 name: meegle-api-work-item-read-and-write
-description: |
-  Meegle OpenAPI for creating, reading, and updating work items.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for creating, reading, and updating work items.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Work Item Read & Write

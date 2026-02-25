@@ -1,9 +1,7 @@
 ---
 name: meegle-api-work-item-attachment
-description: |
-  Meegle OpenAPI for work item attachment operations.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for work item attachment operations.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Attachment

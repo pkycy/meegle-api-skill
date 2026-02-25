@@ -1,9 +1,7 @@
 ---
 name: meegle-api-work-item-group
-description: |
-  Meegle OpenAPI for work item group operations.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for work item group operations.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Group

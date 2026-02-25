@@ -1,9 +1,7 @@
 ---
 name: meegle-api-workflows-and-nodes
-description: |
-  Meegle OpenAPI for workflow and node operations.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for workflow and node operations.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Workflows & Nodes

@@ -1,14 +1,12 @@
 ---
 name: meegle-api-views-measurement
-description: |
-  Meegle OpenAPI for views, kanban, Gantt, and measurement/charts.
-metadata:
-  openclaw: {}
+description: Meegle OpenAPI for views, kanban, Gantt, and measurement/charts.
+metadata: { openclaw: {} }
 ---
 
 # Meegle API — Views & Measurement
 
-Views, boards, and measurement related OpenAPIs (e.g. get view detail, list views, metrics, charts). Use when you need to query or manage views or measurement data.
+Views, boards, and measurement OpenAPIs: list views, work items in views, create/update/delete views, chart data.
 
 ---
 
