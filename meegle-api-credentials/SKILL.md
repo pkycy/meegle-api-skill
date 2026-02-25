@@ -16,7 +16,7 @@ Generate **domain**, **access token** (plugin or user), **context** (project_key
 
 ## Credentials and resolution
 
-**Resolution order:** For each credential: **env var** → config/default → ask user. Do not ask if already set in env. Configure once in `.env`, `~/.zshrc`, or OpenClaw config.
+**Resolution order:** For each credential: **env var** (from OpenClaw config) → ask user. Do not ask if already set in env. For OpenClaw, credentials **must** be set via the OpenClaw config file so they apply to all sessions; see [Environment variables](#environment-variables). Other configuration methods (e.g. shell export) are not recommended.
 
 | Credential    | Env var             | Where to obtain |
 |---------------|---------------------|-----------------|
@@ -27,6 +27,35 @@ Generate **domain**, **access token** (plugin or user), **context** (project_key
 | user_key      | MEEGLE_USER_KEY     | Double-click **avatar**; or `user_key` in user_access_token response. Use in header `X-User-Key` with plugin_access_token. |
 
 **When something is missing:** First check env; if not set, tell the user which credential(s) are missing and where to get them (table above), then ask for values and retry.
+
+## Environment variables
+
+To have credentials available in **every OpenClaw session**, you **must** configure them in OpenClaw’s config file. This is the only supported way for cross-session persistence; other methods (e.g. shell `export`, `.env`) are not recommended. OpenClaw reads this file on startup and injects the listed env into the skill runtime.
+
+**Config path:** `~/.openclaw/openclaw.json`
+
+**Required structure:** Under the skill entry for `meegle-api`, set `env` with the required variable names and values. The skill name must match the index skill `name: meegle-api`.
+
+```json
+{
+  "skills": {
+    "entries": {
+      "meegle-api": {
+        "env": {
+          "MEEGLE_PLUGIN_ID": "<your_plugin_id>",
+          "MEEGLE_PLUGIN_SECRET": "<your_plugin_secret>",
+          "MEEGLE_DOMAIN": "project.feishu.cn",
+          "MEEGLE_PROJECT_KEY": "<your_project_key>",
+          "MEEGLE_USER_KEY": "<your_user_key>"
+        }
+      }
+    }
+  }
+}
+```
+
+- **International region:** use `MEEGLE_DOMAIN`: `project.larksuite.com`.
+- If the file already has other keys (e.g. skill source), only add or update the `env` object under `skills.entries["meegle-api"]`.
 
 ## Domain
 

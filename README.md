@@ -22,7 +22,7 @@ Required credentials are declared in [meegle-api-credentials](./meegle-api-crede
 
 Optional: `authorization_code` and `refresh_token` for obtaining `user_access_token`. Request headers and usage are documented in [meegle-api-credentials](./meegle-api-credentials/SKILL.md).
 
-**Configure once via environment variables** (e.g. `MEEGLE_USER_KEY`, `MEEGLE_PROJECT_KEY`, `MEEGLE_PLUGIN_ID`, `MEEGLE_PLUGIN_SECRET`, `MEEGLE_DOMAIN`) so OpenClaw uses them and does not ask every time. See [Environment variables](meegle-api-credentials/SKILL.md#environment-variables) in the credentials skill.
+**Credentials must be configured in the OpenClaw config file** so they apply to all OpenClaw sessions: set `~/.openclaw/openclaw.json` → `skills.entries["meegle-api"].env` with the five variables above. See [Environment variables](meegle-api-credentials/SKILL.md#environment-variables) in the credentials skill for the exact JSON structure. Other configuration methods are not recommended. The credentials skill also tells the agent to **cache and reuse** `plugin_access_token` within the same session (valid 7200s) instead of calling the token API on every request.
 
 ## Skill List
 
@@ -53,9 +53,9 @@ Optional: `authorization_code` and `refresh_token` for obtaining `user_access_to
 ## Usage
 
 1. Reference this repository as a Cursor skill, or copy the relevant `SKILL.md` files into your Cursor skills directory.
-2. When working on Meegle-related tasks in Cursor, have the AI use the `Read` tool to load the corresponding `SKILL.md` for the needed API area.
+2. When working on Meegle-related tasks, have the AI use the read-file tool (e.g. `Read` or `read_file`) to load the corresponding `SKILL.md` for the needed API area.
 3. Before any Meegle API call, have the AI read **meegle-api-credentials** to obtain domain, token, request headers, and context.
-4. If you are using **OpenClaw**, you can search for this skill pack on **Clawhub** by name `meegle-api-skill` and install it directly via the Clawhub CLI
+4. **OpenClaw**: Search for this skill pack on **Clawhub** by name `meegle-api-skill` and install via the Clawhub CLI. Sub-skills are loaded by reading files under the skill pack root: use the paths in the index skill (with `{baseDir}` replaced by your skill pack root, e.g. the folder containing the index `SKILL.md`). Credentials **must** be set in `~/.openclaw/openclaw.json` under `skills.entries["meegle-api"].env` so they apply to all sessions (see [Environment variables](meegle-api-credentials/SKILL.md#environment-variables)); other configuration methods are not recommended.
 
 ## API Regions
 
@@ -107,7 +107,7 @@ Meegle API Skill 按功能拆成多个子 skill。调用任何 Meegle API 前，
 
 可选：`authorization_code`、`refresh_token` 用于获取 `user_access_token`。请求头及用法见 [meegle-api-credentials](./meegle-api-credentials/SKILL.md)。
 
-**一次配置：使用环境变量**（如 `MEEGLE_USER_KEY`、`MEEGLE_PROJECT_KEY`、`MEEGLE_PLUGIN_ID`、`MEEGLE_PLUGIN_SECRET`、`MEEGLE_DOMAIN`），OpenClaw 会优先读取，无需每次询问。详见 credentials skill 中的 [Environment variables](meegle-api-credentials/SKILL.md#environment-variables)。
+**凭证必须在 OpenClaw 配置文件中配置**，方可在所有 OpenClaw 会话中生效：在 `~/.openclaw/openclaw.json` 的 `skills.entries["meegle-api"].env` 中配置上述五个变量。具体 JSON 结构见 credentials skill 中的 [Environment variables](meegle-api-credentials/SKILL.md#environment-variables)。不推荐其他配置方式。Credentials skill 中还会要求 agent 在**同一会话内缓存并复用** `plugin_access_token`（有效期 7200 秒），避免每次请求都调 token API。
 
 ### Skill 列表
 
@@ -138,9 +138,9 @@ Meegle API Skill 按功能拆成多个子 skill。调用任何 Meegle API 前，
 ### 使用方式
 
 1. 将此仓库作为 Cursor skill 引用，或将需要的 `SKILL.md` 复制到 Cursor 的 skills 目录。
-2. 在 Cursor 中处理与 Meegle 相关的任务时，让 AI 使用 `Read` 工具加载对应 API 领域的 `SKILL.md`。
+2. 处理与 Meegle 相关的任务时，让 AI 使用读文件工具（如 `Read` 或 `read_file`）加载对应 API 领域的 `SKILL.md`。
 3. 调用任何 Meegle API 前，让 AI 先阅读 **meegle-api-credentials**，获取域名、令牌、请求头和上下文。
-4. 若使用 **OpenClaw**，可在 **Clawhub** 中按名称 `meegle-api-skill` 搜索该技能包，并通过 Clawhub CLI 直接安装。
+4. **OpenClaw**：在 **Clawhub** 中按名称 `meegle-api-skill` 搜索并安装。子 skill 通过「在技能包根目录下读文件」加载：使用索引 skill 中的路径（将 `{baseDir}` 替换为你的技能包根目录）。凭证**必须**在 `~/.openclaw/openclaw.json` 的 `skills.entries["meegle-api"].env` 中配置，方可在所有会话中生效，详见 [Environment variables](meegle-api-credentials/SKILL.md#environment-variables)；不推荐其他配置方式。
 
 ### API 区域
 
